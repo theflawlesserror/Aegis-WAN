@@ -1,1 +1,0 @@
-- Personality/Device type: "vmanage"/"vsmart"/"vedge"
