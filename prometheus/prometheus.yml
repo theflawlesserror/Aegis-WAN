@@ -1,0 +1,13 @@
+global:
+  scrape_interval: 5s
+
+scrape_configs:
+  - job_name: "aegis_sdwan"
+    static_configs:
+      # host.docker.internal lets the container talk to your local machine's port 8002
+      - targets: ["host.docker.internal:8002"]
+
+  - job_name: "aegis_predictor_exporter"
+    static_configs:
+      # host.docker.internal lets the container talk to your local machine's port 8002
+      - targets: ["host.docker.internal:9101"]
