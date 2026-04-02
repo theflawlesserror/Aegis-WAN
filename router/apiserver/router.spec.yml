@@ -1,0 +1,601 @@
+openapi: 3.0.1
+info:
+  title: Aegis-WAN Simulation API
+  description: Combined API spec for Cisco vManage SD-WAN simulation and internal Aegis state control.
+  version: 1.1.0
+servers:
+  - url: /
+
+components:
+  schemas:
+    # ----------------------------------------
+    # SHARED ERROR SCHEMAS
+    # ----------------------------------------
+    vManageErrorResponse:
+      type: object
+      properties:
+        error:
+          type: object
+          properties:
+            message:
+              type: string
+
+    SimErrorResponse:
+      type: object
+      properties:
+        error:
+          type: string
+
+    # ----------------------------------------
+    # vManage MOCK SCHEMAS
+    # ----------------------------------------
+    DeviceInventoryResponse:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            type: object
+            properties:
+              device_id:
+                type: string
+              host_name:
+                type: string
+              system_ip:
+                type: string
+
+    TlocResponse:
+      type: object
+      properties:
+        header:
+          type: object
+          properties:
+            generatedOn:
+              type: integer
+        data:
+          type: array
+          items:
+            type: object
+            properties:
+              color:
+                type: string
+              system-ip:
+                type: string
+              bfdSessionsUp:
+                type: integer
+              state:
+                type: string
+
+    InterfaceResponse:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            type: object
+            properties:
+              if-name:
+                type: string
+              oper-status:
+                type: string
+              admin-status:
+                type: string
+              rx-kbps:
+                type: string
+              tx-kbps:
+                type: string
+              mtu:
+                type: string
+              ip-address:
+                type: string
+
+    AppRouteStatisticsResponse:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            type: object
+            properties:
+              vdevice-name:
+                type: string
+              local-color:
+                type: string
+              latency:
+                type: integer
+              loss_percentage:
+                type: number
+              jitter:
+                type: integer
+              vqoe_score:
+                type: integer
+
+    InterfaceAggregationResponse:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            type: object
+            properties:
+              vdevice-name:
+                type: string
+              interface:
+                type: string
+              rx_drops:
+                type: integer
+              tx_drops:
+                type: integer
+              rx_kbps:
+                type: integer
+              tx_kbps:
+                type: integer
+
+    QosAggregationResponse:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            type: object
+            properties:
+              vdevice-name:
+                type: string
+              interface:
+                type: string
+              queue_name:
+                type: string
+              drop_in_kbps:
+                type: integer
+              tx_pkts:
+                type: integer
+              queued_pkts:
+                type: integer
+
+    PolicyListResponse:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            type: object
+            properties:
+              policyId:
+                type: string
+              policyName:
+                type: string
+              policyDescription:
+                type: string
+              policyType:
+                type: string
+              isPolicyActivated:
+                type: boolean
+              preferredColor:
+                type: string
+
+    PolicyDefinitionResponse:
+      type: object
+      properties:
+        policyDefinition:
+          type: object
+          properties:
+            name:
+              type: string
+            sequences:
+              type: array
+              items:
+                type: object
+                properties:
+                  sequenceType:
+                    type: string
+                  sequenceId:
+                    type: integer
+                  match:
+                    type: object
+                  action:
+                    type: object
+                    properties:
+                      preferredColor:
+                        type: string
+                      strict:
+                        type: boolean
+
+    PolicyUpdateResponse:
+      type: object
+      properties:
+        masterTemplatesAffected:
+          type: array
+          items:
+            type: string
+
+    # FIX 3: Added ActivatePolicyRequest schema.
+    # main.py's activate_policy reads request.json implicitly via Flask;
+    # the POST body is intentionally empty but must be declared to be
+    # OpenAPI 3-compliant for tooling that validates required requestBody.
+    ActivatePolicyRequest:
+      type: object
+      description: >
+        Request body for activating a vSmart policy. No fields are required;
+        all activation parameters are resolved server-side from the policy_id.
+
+    ActivationResponse:
+      type: object
+      properties:
+        id:
+          type: string
+
+    TaskStatusResponse:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            type: object
+            properties:
+              statusId:
+                type: string
+              status:
+                type: string
+              activity:
+                type: array
+                items:
+                  type: string
+
+    AuditLogResponse:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            type: object
+            properties:
+              entry_time:
+                type: integer
+              user:
+                type: string
+              action:
+                type: string
+              details:
+                type: string
+              status:
+                type: string
+
+    # ----------------------------------------
+    # AEGIS SIMULATION SCHEMAS
+    # ----------------------------------------
+    SimHealthRequest:
+      type: object
+      required:
+        - health
+      properties:
+        health:
+          type: integer
+          description: Link health percentage (0-100)
+          minimum: 0
+          maximum: 100
+
+    SimHealthResponse:
+      type: object
+      properties:
+        message:
+          type: string
+
+    SimOverviewResponse:
+      type: object
+      additionalProperties:
+        type: object
+        properties:
+          active_color:
+            type: string
+          active_policy:
+            type: string
+          links:
+            type: object
+            additionalProperties:
+              type: object
+              properties:
+                health:
+                  type: string
+                accumulated_tx_drops:
+                  type: integer
+                live_metrics:
+                  type: string
+
+    # FIX 1: Added EmptyPostRequest schema for POST statistics endpoints.
+    # main.py accepts POST on /approute, /interface/aggregation, and
+    # /qos/aggregation but does not read the request body — the POST
+    # method is used to match vManage's real API contract. The schema
+    # documents this explicitly so API consumers aren't surprised.
+    EmptyPostRequest:
+      type: object
+      description: >
+        Empty request body. These POST endpoints mirror the real Cisco vManage
+        statistics API which uses POST for query-style requests. The body is
+        accepted but not read by the simulation server.
+
+paths:
+  # ==========================================
+  # CISCO vMANAGE MOCK ENDPOINTS
+  # ==========================================
+  /dataservice/device:
+    get:
+      summary: Get device inventory
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeviceInventoryResponse'
+
+  /dataservice/device/tloc:
+    get:
+      summary: Get TLOC status list
+      parameters:
+        - name: deviceId
+          in: query
+          required: true
+          description: The system-ip of the device
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TlocResponse'
+        '400':
+          description: Missing deviceId parameter
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/vManageErrorResponse'
+
+  /dataservice/device/interface:
+    get:
+      summary: Get real-time interface statistics
+      parameters:
+        - name: deviceId
+          in: query
+          required: true
+          description: The system-ip of the device
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InterfaceResponse'
+        '400':
+          description: Missing deviceId parameter
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/vManageErrorResponse'
+
+  # FIX 2a: Added requestBody to /dataservice/statistics/approute.
+  # The original spec omitted requestBody entirely. main.py defines this
+  # as a POST endpoint (matching the real vManage API); a requestBody
+  # must be declared even when unused by the simulation server.
+  /dataservice/statistics/approute:
+    post:
+      summary: Get aggregated App-Route data
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EmptyPostRequest'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AppRouteStatisticsResponse'
+
+  # FIX 2b: Added requestBody to /dataservice/statistics/interface/aggregation.
+  # Same as above — POST endpoint with no body consumed server-side.
+  /dataservice/statistics/interface/aggregation:
+    post:
+      summary: Get aggregated interface statistics
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EmptyPostRequest'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InterfaceAggregationResponse'
+
+  # FIX 2c: Added requestBody to /dataservice/statistics/qos/aggregation.
+  # Same as above — POST endpoint with no body consumed server-side.
+  /dataservice/statistics/qos/aggregation:
+    post:
+      summary: Get aggregated QoS statistics
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EmptyPostRequest'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/QosAggregationResponse'
+
+  /dataservice/template/policy/vsmart:
+    get:
+      summary: Get list of centralized vSmart policies
+      description: Returns all available policies and their activation status.
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PolicyListResponse'
+
+  /dataservice/template/policy/definition/approute/{policy_id}:
+    get:
+      summary: Get App-Route policy definition
+      parameters:
+        - name: policy_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PolicyDefinitionResponse'
+    put:
+      summary: Update App-Route policy definition
+      parameters:
+        - name: policy_id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PolicyDefinitionResponse'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PolicyUpdateResponse'
+
+  /dataservice/template/policy/vsmart/activate/{policy_id}:
+    post:
+      summary: Activate Centralized Policy on vSmart
+      parameters:
+        - name: policy_id
+          in: path
+          required: true
+          schema:
+            type: string
+      # FIX 3: Added requestBody declaration for the activate endpoint.
+      # main.py's activate_policy() is a POST handler. OpenAPI 3 requires
+      # POST endpoints to explicitly declare requestBody (even if empty)
+      # so that validators and code-gen tools handle the endpoint correctly.
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ActivatePolicyRequest'
+      responses:
+        '200':
+          description: Task ID
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ActivationResponse'
+        '404':
+          description: Policy not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/vManageErrorResponse'
+
+  /dataservice/device/action/status/{task_id}:
+    get:
+      summary: Monitor status of async task
+      parameters:
+        - name: task_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TaskStatusResponse'
+
+  /dataservice/auditlog:
+    get:
+      summary: Retrieve administrative audit logs
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuditLogResponse'
+
+  # ==========================================
+  # AEGIS-WAN CONTROL & INJECTION ENDPOINTS
+  # ==========================================
+  /sim/control/health/{system_ip}/{link_type}:
+    post:
+      summary: Degrade or improve a specific link's health for a specific router
+      parameters:
+        - name: system_ip
+          in: path
+          required: true
+          description: The System-IP of the target vessel router (e.g., 10.10.1.13)
+          schema:
+            type: string
+        - name: link_type
+          in: path
+          required: true
+          description: Valid values are '5G', 'Satellite', or 'Ethernet'
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SimHealthRequest'
+      responses:
+        '200':
+          description: Health successfully updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SimHealthResponse'
+        '404':
+          description: >
+            Vessel not found (system_ip not in VESSEL_DB), or link type not
+            found on that vessel (link_type not in vessel transports). Both
+            conditions return the same SimErrorResponse shape with a
+            descriptive string in the "error" field.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SimErrorResponse'
+
+  /sim/overview:
+    get:
+      summary: Get human-friendly diagnostics dashboard data
+      responses:
+        '200':
+          description: Real-time calculated diagnostics view mapping hostnames to their status
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SimOverviewResponse'

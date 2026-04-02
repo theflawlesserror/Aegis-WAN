@@ -1,0 +1,318 @@
+{
+  "vessels": {
+    "10.10.3.15": {
+      "identity": {
+        "system_ip": "10.10.3.15",
+        "device_id": "172.16.255.13",
+        "host_name": "Ever Given",
+        "reachability": "reachable",
+        "status": "normal"
+      },
+      "control_plane": {
+        "active_policy_name": "Aegis-Vessel-Routing",
+        "preferred_color": "cellular",
+        "bfd_status": "up"
+      },
+      "transports": {
+        "5G": {
+          "sdwan_color": "cellular",
+          "physical_interface": "Cellular0/1/0",
+          "public_ip": "100.64.3.5",
+          "mtu": 1500,
+          "oper_status": "up",
+          "health_percentage": 100,
+          "baselines": {
+            "base_latency_ms": 45,
+            "base_jitter_ms": 5,
+            "base_loss_percent": 0,
+            "max_rx_kbps": 50000,
+            "max_tx_kbps": 25000
+          },
+          "accumulated_stats": {
+            "total_rx_drops": 1204,
+            "total_tx_drops": 340
+          },
+          "qos_queues": {
+            "Queue0": {
+              "traffic_class": "Voice/Telemetry",
+              "dscp": 46
+            },
+            "Queue3": {
+              "traffic_class": "Bulk/General",
+              "dscp": 0
+            }
+          }
+        },
+        "Satellite": {
+          "sdwan_color": "biz-internet",
+          "physical_interface": "GigabitEthernet0/1",
+          "public_ip": "203.0.113.30",
+          "mtu": 1420,
+          "oper_status": "up",
+          "health_percentage": 100,
+          "baselines": {
+            "base_latency_ms": 650,
+            "base_jitter_ms": 25,
+            "base_loss_percent": 0,
+            "max_rx_kbps": 10000,
+            "max_tx_kbps": 2000
+          },
+          "accumulated_stats": {
+            "total_rx_drops": 560,
+            "total_tx_drops": 110
+          },
+          "qos_queues": {
+            "Queue0": {
+              "traffic_class": "Voice/Telemetry",
+              "dscp": 46
+            },
+            "Queue3": {
+              "traffic_class": "Bulk/General",
+              "dscp": 0
+            }
+          }
+        }
+      }
+    },
+    "10.10.4.16": {
+      "identity": {
+        "system_ip": "10.10.4.16",
+        "device_id": "172.16.255.14",
+        "host_name": "HMM Algeciras",
+        "reachability": "reachable",
+        "status": "normal"
+      },
+      "control_plane": {
+        "active_policy_name": "Aegis-Vessel-Routing",
+        "preferred_color": "cellular",
+        "bfd_status": "up"
+      },
+      "transports": {
+        "5G": {
+          "sdwan_color": "cellular",
+          "physical_interface": "Cellular0/1/0",
+          "public_ip": "100.64.4.5",
+          "mtu": 1500,
+          "oper_status": "up",
+          "health_percentage": 100,
+          "baselines": {
+            "base_latency_ms": 45,
+            "base_jitter_ms": 5,
+            "base_loss_percent": 0,
+            "max_rx_kbps": 50000,
+            "max_tx_kbps": 25000
+          },
+          "accumulated_stats": {
+            "total_rx_drops": 1204,
+            "total_tx_drops": 340
+          },
+          "qos_queues": {
+            "Queue0": {
+              "traffic_class": "Voice/Telemetry",
+              "dscp": 46
+            },
+            "Queue3": {
+              "traffic_class": "Bulk/General",
+              "dscp": 0
+            }
+          }
+        },
+        "Satellite": {
+          "sdwan_color": "biz-internet",
+          "physical_interface": "GigabitEthernet0/1",
+          "public_ip": "203.0.113.40",
+          "mtu": 1420,
+          "oper_status": "up",
+          "health_percentage": 100,
+          "baselines": {
+            "base_latency_ms": 650,
+            "base_jitter_ms": 25,
+            "base_loss_percent": 0,
+            "max_rx_kbps": 10000,
+            "max_tx_kbps": 2000
+          },
+          "accumulated_stats": {
+            "total_rx_drops": 560,
+            "total_tx_drops": 110
+          },
+          "qos_queues": {
+            "Queue0": {
+              "traffic_class": "Voice/Telemetry",
+              "dscp": 46
+            },
+            "Queue3": {
+              "traffic_class": "Bulk/General",
+              "dscp": 0
+            }
+          }
+        }
+      }
+    },
+    "10.10.5.17": {
+      "identity": {
+        "system_ip": "10.10.5.17",
+        "device_id": "172.16.255.15",
+        "host_name": "Madrid Maersk",
+        "reachability": "reachable",
+        "status": "normal"
+      },
+      "control_plane": {
+        "active_policy_name": "Aegis-Vessel-Routing",
+        "preferred_color": "cellular",
+        "bfd_status": "up"
+      },
+      "transports": {
+        "5G": {
+          "sdwan_color": "cellular",
+          "physical_interface": "Cellular0/1/0",
+          "public_ip": "100.64.5.5",
+          "mtu": 1500,
+          "oper_status": "up",
+          "health_percentage": 100,
+          "baselines": {
+            "base_latency_ms": 45,
+            "base_jitter_ms": 5,
+            "base_loss_percent": 0,
+            "max_rx_kbps": 50000,
+            "max_tx_kbps": 25000
+          },
+          "accumulated_stats": {
+            "total_rx_drops": 1204,
+            "total_tx_drops": 340
+          },
+          "qos_queues": {
+            "Queue0": {
+              "traffic_class": "Voice/Telemetry",
+              "dscp": 46
+            },
+            "Queue3": {
+              "traffic_class": "Bulk/General",
+              "dscp": 0
+            }
+          }
+        },
+        "Satellite": {
+          "sdwan_color": "biz-internet",
+          "physical_interface": "GigabitEthernet0/1",
+          "public_ip": "203.0.113.50",
+          "mtu": 1420,
+          "oper_status": "up",
+          "health_percentage": 100,
+          "baselines": {
+            "base_latency_ms": 650,
+            "base_jitter_ms": 25,
+            "base_loss_percent": 0,
+            "max_rx_kbps": 10000,
+            "max_tx_kbps": 2000
+          },
+          "accumulated_stats": {
+            "total_rx_drops": 560,
+            "total_tx_drops": 110
+          },
+          "qos_queues": {
+            "Queue0": {
+              "traffic_class": "Voice/Telemetry",
+              "dscp": 46
+            },
+            "Queue3": {
+              "traffic_class": "Bulk/General",
+              "dscp": 0
+            }
+          }
+        }
+      }
+    },
+    "10.10.6.18": {
+      "identity": {
+        "system_ip": "10.10.6.18",
+        "device_id": "172.16.255.16",
+        "host_name": "Mozah",
+        "reachability": "reachable",
+        "status": "normal"
+      },
+      "control_plane": {
+        "active_policy_name": "Aegis-Vessel-Routing",
+        "preferred_color": "cellular",
+        "bfd_status": "up"
+      },
+      "transports": {
+        "5G": {
+          "sdwan_color": "cellular",
+          "physical_interface": "Cellular0/1/0",
+          "public_ip": "100.64.6.5",
+          "mtu": 1500,
+          "oper_status": "up",
+          "health_percentage": 100,
+          "baselines": {
+            "base_latency_ms": 45,
+            "base_jitter_ms": 5,
+            "base_loss_percent": 0,
+            "max_rx_kbps": 50000,
+            "max_tx_kbps": 25000
+          },
+          "accumulated_stats": {
+            "total_rx_drops": 1204,
+            "total_tx_drops": 340
+          },
+          "qos_queues": {
+            "Queue0": {
+              "traffic_class": "Voice/Telemetry",
+              "dscp": 46
+            },
+            "Queue3": {
+              "traffic_class": "Bulk/General",
+              "dscp": 0
+            }
+          }
+        },
+        "Satellite": {
+          "sdwan_color": "biz-internet",
+          "physical_interface": "GigabitEthernet0/1",
+          "public_ip": "203.0.113.60",
+          "mtu": 1420,
+          "oper_status": "up",
+          "health_percentage": 100,
+          "baselines": {
+            "base_latency_ms": 650,
+            "base_jitter_ms": 25,
+            "base_loss_percent": 0,
+            "max_rx_kbps": 10000,
+            "max_tx_kbps": 2000
+          },
+          "accumulated_stats": {
+            "total_rx_drops": 560,
+            "total_tx_drops": 110
+          },
+          "qos_queues": {
+            "Queue0": {
+              "traffic_class": "Voice/Telemetry",
+              "dscp": 46
+            },
+            "Queue3": {
+              "traffic_class": "Bulk/General",
+              "dscp": 0
+            }
+          }
+        }
+      }
+    }
+  },
+  "policies": [
+    {
+      "policyId": "policy-001",
+      "policyName": "Aegis-Vessel-Routing",
+      "policyDescription": "Default policy: Prefers 5G (cellular) for all traffic",
+      "policyType": "app-route",
+      "isPolicyActivated": true,
+      "preferredColor": "cellular"
+    },
+    {
+      "policyId": "policy-002",
+      "policyName": "Aegis-Failover-Routing",
+      "policyDescription": "Emergency policy: Forces traffic to Satellite (biz-internet)",
+      "policyType": "app-route",
+      "isPolicyActivated": false,
+      "preferredColor": "biz-internet"
+    }
+  ]
+}
